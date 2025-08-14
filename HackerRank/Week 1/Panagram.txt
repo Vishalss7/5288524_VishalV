@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char s[1005];
+    int letters[26]={0};
+    int i;
+
+    fgets(s,sizeof(s),stdin);
+
+    for(i=0;s[i];i++){
+        if(isalpha(s[i])){
+            letters[tolower(s[i])-'a']=1;
+        }
+    }
+
+    for(i=0;i<26;i++){
+        if(letters[i]==0){
+            printf("not pangram");
+            return 0;
+        }
+    }
+
+    printf("pangram");
+    return 0;
+}
