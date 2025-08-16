@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <string.h>
+int isPowerOfTwo(unsigned long long n) {
+    return (n && !(n & (n - 1)));
+}
+
+unsigned long long largestPowerOfTwoLessThan(unsigned long long n) {
+    unsigned long long p = 1;
+    while (p * 2 < n) {
+        p *= 2;
+    }
+    return p;
+}
+
+char* counterGame(unsigned long long n) {
+    int turns = 0;
+
+    while (n != 1) {
+        if (isPowerOfTwo(n)) {
+            n /= 2;
+        } else {
+            n -= largestPowerOfTwoLessThan(n);
+        }
+        turns++;
+    }
+
+    return (turns % 2 == 1) ? "Louise" : "Richard";
+}
+
+int main() {
+    int t;
+    scanf("%d", &t);
+
+    while (t--) {
+        unsigned long long n;
+        scanf("%llu", &n);
+        printf("%s\n", counterGame(n));
+    }
+
+    return 0;
+}

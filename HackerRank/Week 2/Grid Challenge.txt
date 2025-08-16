@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int cmpChar(const void *a, const void *b) {
+    return (*(char *)a - *(char *)b);
+}
+
+char* gridChallenge(int grid_count, char** grid) {
+        for (int i = 0; i < grid_count; i++) {
+        qsort(grid[i], strlen(grid[i]), sizeof(char), cmpChar);
+    }
+
+    
+    int colCount = strlen(grid[0]);
+    for (int col = 0; col < colCount; col++) {
+        for (int row = 0; row < grid_count - 1; row++) {
+            if (grid[row][col] > grid[row + 1][col]) {
+                return "NO";
+            }
+        }
+    }
+    return "YES";
+}
+
+int main() {
+    int t;
+    scanf("%d", &t);
+    while (t--) {
+        int n;
+        scanf("%d", &n); 
+      
+        char **grid = malloc(n * sizeof(char*));
+        for (int i = 0; i < n; i++) {
+            grid[i] = malloc(101 * sizeof(char)); 
+            scanf("%s", grid[i]);
+        }
+
+       
+        char *result = gridChallenge(n, grid);
+        printf("%s\n", result);
+
+  
+        for (int i = 0; i < n; i++) {
+            free(grid[i]);
+        }
+        free(grid);
+    }
+
+    return 0;
+}
