@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+typedef struct {
+    int *data;
+    int size;
+    int capacity;
+} Sequence;
+
+
+void initSequence(Sequence *seq) {
+    seq->size = 0;
+    seq->capacity = 2; // Start small, expand as needed
+    seq->data = (int *)malloc(seq->capacity * sizeof(int));
+}
+void appendSequence(Sequence *seq, int value) {
+    if (seq->size == seq->capacity) {
+        seq->capacity *= 2;
+        seq->data = (int *)realloc(seq->data, seq->capacity * sizeof(int));
+    }
+    seq->data[seq->size++] = value;
+}
+
+
+void freeSequence(Sequence *seq) {
+    free(seq->data);
+}
+
+
+int main() {
+    int n, q;
+    scanf("%d %d", &n, &q);
+
+    // Allocate n sequences
+    Sequence *arr = (Sequence *)malloc(n * sizeof(Sequence));
+    for (int i = 0; i < n; i++) {
+        initSequence(&arr[i]);
+    }
+
+    int lastAnswer = 0;
+
+    for (int i = 0; i < q; i++) {
+        int type, x, y;
+        scanf("%d %d %d", &type, &x, &y);
+
+        int idx = (x ^ lastAnswer) % n;
+
+        if (type == 1) {
+            // Append 'y' to arr[idx]
+            appendSequence(&arr[idx], y);
+        } else if (type == 2) {
+            // Retrieve value and update lastAnswer
+            int pos = y % arr[idx].size;
+            lastAnswer = arr[idx].data[pos];
+            printf("%d\n", lastAnswer);
+        }
+    }
+
+   
+    for (int i = 0; i < n; i++) {
+        freeSequence(&arr[i]);
+    }
+    free(arr);
+    return 0;
+}
