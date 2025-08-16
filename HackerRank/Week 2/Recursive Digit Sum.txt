@@ -1,0 +1,28 @@
+#include <stdio.h>
+int superDigit(char* n, int k) {
+    long sum = 0;
+
+    
+    for (int i = 0; n[i] != '\0'; i++) {
+        sum += n[i] - '0';
+    }
+    sum *= k;
+    while (sum >= 10) {
+        long temp = 0;
+        while (sum > 0) {
+            temp += sum % 10;
+            sum /= 10;
+        }
+        sum = temp;
+    }
+
+    return (int)sum;
+}
+
+int main() {
+    char n[100001]; 
+    int k;
+    scanf("%s %d", n, &k);
+    printf("%d\n", superDigit(n, k));
+    return 0;
+}
