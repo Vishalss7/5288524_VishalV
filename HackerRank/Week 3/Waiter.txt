@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+bool isPrime(int n) {
+    if (n < 2) return false;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) return false;
+    }
+    return true;
+}
+
+void generatePrimes(int *primes, int q) {
+    int count = 0, num = 2;
+    while (count < q) {
+        if (isPrime(num)) primes[count++] = num;
+        num++;
+    }
+}
+
+int* waiter(int number_count, int* number, int q, int* result_count) {
+    int *primes = malloc(q * sizeof(int));
+    generatePrimes(primes, q);
+    int *result = malloc(number_count * sizeof(int));
+    int resSize = 0;
+    int *A = malloc(number_count * sizeof(int));
+    int aSize = number_count;
+    for (int i = 0; i < number_count; i++) A[i] = number[i];
+    int *nextA = malloc(number_count * sizeof(int));
+    int *B = malloc(number_count * sizeof(int));
+    for (int i = 0; i < q; i++) {
+        int prime = primes[i];
+        int bSize = 0, nextASize = 0;
+        for (int j = aSize - 1; j >= 0; j--) {
+            if (A[j] % prime == 0) B[bSize++] = A[j];
+            else nextA[nextASize++] = A[j];
+        }
+        for (int j = bSize - 1; j >= 0; j--) result[resSize++] = B[j];
+        for (int j = 0; j < nextASize; j++) A[j] = nextA[j];
+        aSize = nextASize;
+    }
+    for (int j = aSize - 1; j >= 0; j--) result[resSize++] = A[j];
+    *result_count = resSize;
+    free(primes);
+    free(A);
+    free(nextA);
+    free(B);
+    return result;
+}
+
+int main() {
+    int n, q;
+    if (scanf("%d %d", &n, &q) != 2) return 0;
+    int *arr = malloc(n * sizeof(int));
+    for (int i = 0; i < n; i++) scanf("%d", &arr[i]);
+    int result_count = 0;
+    int *res = waiter(n, arr, q, &result_count);
+    for (int i = 0; i < result_count; i++) printf("%d\n", res[i]);
+    free(arr);
+    free(res);
+    return 0;
+}
