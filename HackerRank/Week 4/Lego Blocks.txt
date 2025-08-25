@@ -1,0 +1,66 @@
+#include <assert.h>
+#include <ctype.h>
+#include <limits.h>
+#include <math.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MOD 1000000007
+char* readline();
+char* ltrim(char*);
+char* rtrim(char*);
+char** split_string(char*);
+int parse_int(char*);
+long long modPow(long long base, long long exp) {
+    long long result = 1;
+    while (exp > 0) {
+        if (exp % 2 == 1)
+            result = (result * base) % MOD;
+        base = (base * base) % MOD;
+        exp /= 2;
+    }
+    return result;
+}
+
+int legoBlocks(int n, int m) {
+       long long rowWays[m + 1];
+    rowWays[0] = 1;
+    for (int i = 1; i <= m; i++) {
+        rowWays[i] = rowWays[i - 1];
+        if (i >= 2) rowWays[i] = (rowWays[i] + rowWays[i - 2]) % MOD;
+        if (i >= 3) rowWays[i] = (rowWays[i] + rowWays[i - 3]) % MOD;
+        if (i >= 4) rowWays[i] = (rowWays[i] + rowWays[i - 4]) % MOD;
+    }
+
+        long long totalWays[m + 1];
+    for (int i = 1; i <= m; i++) {
+        totalWays[i] = modPow(rowWays[i], n);
+    }
+
+        long long solidWays[m + 1];
+    solidWays[0] = 0;
+    for (int i = 1; i <= m; i++) {
+        solidWays[i] = totalWays[i];
+        for (int j = 1; j < i; j++) {
+            solidWays[i] = (solidWays[i] - (solidWays[j] * totalWays[i - j]) % MOD + MOD) % MOD;
+        }
+    }
+
+    return (int)solidWays[m];
+}
+
+int main() {
+    int t;
+    scanf("%d", &t);
+
+    while (t--) {
+        int n, m;
+        scanf("%d %d", &n, &m);
+        printf("%d\n", legoBlocks(n, m));
+    }
+
+    return 0;
+}

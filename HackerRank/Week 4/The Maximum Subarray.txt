@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+int* maxSubarray(int arr_count, int* arr, int* result_count) {
+    *result_count = 2; 
+    int* result = (int*)malloc(2 * sizeof(int));
+        int maxSubarraySum = arr[0];
+    int currentSum = arr[0];
+        int subsequenceSum = (arr[0] > 0) ? arr[0] : 0;
+    int maxElement = arr[0];
+    for (int i = 1; i < arr_count; i++) {
+              if (currentSum + arr[i] > arr[i])
+            currentSum += arr[i];
+        else
+            currentSum = arr[i];
+        if (currentSum > maxSubarraySum)
+            maxSubarraySum = currentSum;
+        if (arr[i] > 0)
+            subsequenceSum += arr[i];
+        if (arr[i] > maxElement)
+            maxElement = arr[i];
+    }
+    if (subsequenceSum == 0)
+        subsequenceSum = maxElement;
+    result[0] = maxSubarraySum;
+    result[1] = subsequenceSum;
+
+    return result;
+}
+
+int main() {
+    int t;
+    scanf("%d", &t);     while (t--) {
+        int n;
+        scanf("%d", &n);
+        int* arr = (int*)malloc(n * sizeof(int));
+        for (int i = 0; i < n; i++) {
+            scanf("%d", &arr[i]);
+        }
+        int result_count;
+        int* result = maxSubarray(n, arr, &result_count);
+        printf("%d %d\n", result[0], result[1]);
+        free(arr);
+        free(result);
+    }
+
+    return 0;
+}
