@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+int* climbingLeaderboard(int* ranked, int n, int* player, int m) {
+    int* scores = (int*)malloc(n * sizeof(int));
+    int size = 0;
+    scores[size++] = ranked[0];
+    for (int i = 1; i < n; i++) {
+        if (ranked[i] != ranked[i-1]) {
+            scores[size++] = ranked[i];
+        }
+    }
+
+    int* result = (int*)malloc(m * sizeof(int));
+    int idx = size - 1; 
+    for (int i = 0; i < m; i++) {
+        while (idx >= 0 && player[i] >= scores[idx]) {
+            idx--;
+        }
+        result[i] = idx + 2;
+    }
+
+    free(scores);
+    return result;
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    int* ranked = (int*)malloc(n * sizeof(int));
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &ranked[i]);
+    }
+
+    int m;
+    scanf("%d", &m);
+    int* player = (int*)malloc(m * sizeof(int));
+    for (int i = 0; i < m; i++) {
+        scanf("%d", &player[i]);
+    }
+
+    int* result = climbingLeaderboard(ranked, n, player, m);
+
+    for (int i = 0; i < m; i++) {
+        printf("%d\n", result[i]);
+    }
+
+    free(ranked);
+    free(player);
+    free(result);
+    return 0;
+}

@@ -1,0 +1,85 @@
+#include <assert.h>
+#include <ctype.h>
+#include <limits.h>
+#include <math.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char* readline();
+
+
+char* isValid(char* s) {
+    static char YES[] = "YES";
+    static char NO[] = "NO";
+    int freq[26] = {0};
+       for (int i = 0; s[i]; i++) {
+        freq[s[i] - 'a']++;
+    }
+
+      int nonZero[26], nzCount = 0;
+    for (int i = 0; i < 26; i++) {
+        if (freq[i] > 0) {
+            nonZero[nzCount++] = freq[i];
+        }
+    }
+
+        int min = nonZero[0], max = nonZero[0];
+    for (int i = 1; i < nzCount; i++) {
+        if (nonZero[i] < min) min = nonZero[i];
+        if (nonZero[i] > max) max = nonZero[i];
+    }
+
+  
+    if (min == max) return YES;
+        int minCount = 0, maxCount = 0;
+    for (int i = 0; i < nzCount; i++) {
+        if (nonZero[i] == min) minCount++;
+        if (nonZero[i] == max) maxCount++;
+    }
+
+        if (max == min + 1 && maxCount == 1) return YES;
+        if (min == 1 && minCount == 1 && maxCount == nzCount - 1) return YES;
+    return NO;
+}
+
+int main() {
+    char* s = readline(); 
+    char* result = isValid(s);
+    printf("%s\n", result); 
+    free(s);                
+    return 0;
+}
+
+
+char* readline() {
+    size_t alloc_length = 1024;
+    size_t data_length = 0;
+    char* data = malloc(alloc_length);
+    while (true) {
+        char* cursor = data + data_length;
+        char* line = fgets(cursor, alloc_length - data_length, stdin);
+        if (!line) {
+            break;
+        }
+        data_length += strlen(cursor);
+        if (data_length < alloc_length - 1 || data[data_length - 1] == '\n') {
+            break;
+        }
+
+        alloc_length <<= 1;
+        data = realloc(data, alloc_length);
+        if (!data) {
+            return NULL;
+        }
+    }
+
+    if (data[data_length - 1] == '\n') {
+        data[data_length - 1] = '\0';
+    }
+
+    return data;
+}
