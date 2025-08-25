@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int *data;
+    int top;
+    int capacity;
+} Stack;
+
+Stack* createStack(int capacity) {
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
+    stack->capacity = capacity;
+    stack->top = -1;
+    stack->data = (int*)malloc(capacity * sizeof(int));
+    return stack;
+}
+
+int isEmpty(Stack* stack) {
+    return stack->top == -1;
+}
+
+void push(Stack* stack, int value) {
+    stack->data[++stack->top] = value;
+}
+
+int pop(Stack* stack) {
+    return stack->data[stack->top--];
+}
+
+int peek(Stack* stack) {
+    return stack->data[stack->top];
+}
+
+int main() {
+    int q;
+    scanf("%d", &q);
+    Stack* stack1 = createStack(q);
+    Stack* stack2 = createStack(q);
+    while (q--) {
+        int type;
+        scanf("%d", &type);
+        if (type == 1) {
+            int x;
+            scanf("%d", &x);
+            push(stack1, x);
+        } else if (type == 2) {
+            if (isEmpty(stack2)) {
+                while (!isEmpty(stack1)) {
+                    push(stack2, pop(stack1));
+                }
+            }
+            if (!isEmpty(stack2)) pop(stack2);
+        } else if (type == 3) {
+            if (isEmpty(stack2)) {
+                while (!isEmpty(stack1)) {
+                    push(stack2, pop(stack1));
+                }
+            }
+            if (!isEmpty(stack2)) printf("%d\n", peek(stack2));
+        }
+    }
+    free(stack1->data);
+    free(stack1);
+    free(stack2->data);
+    free(stack2);
+    return 0;
+}
